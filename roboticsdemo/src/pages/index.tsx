@@ -1,7 +1,4 @@
-import Head from "next/head";
-import Image from "next/image";
 import { Inter } from "next/font/google";
-import styles from "@/styles/Home.module.css";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
@@ -179,7 +176,56 @@ export default function Home() {
             </form>
           </TabPanel>
           <TabPanel value="2">Item Two</TabPanel>
-          <TabPanel value="3">Item Three</TabPanel>
+          <TabPanel value="3">
+            <div style={{ display: "flex", flexDirection: "row" }}>
+              {members.map((m) => (
+                <div
+                  className="card"
+                  style={{ marginRight: 40, marginLeft: 40 }}
+                >
+                  <img src={m.imageUrl} alt="" className="card__image" />
+                  <p className="card__name">
+                    {m.username} ({m.grade})
+                  </p>
+                  <div
+                    className="grid-container"
+                    style={{
+                      alignItems: "center",
+                      justifyContent: "center",
+                      display: "flex",
+                      bottom: 10,
+                      position: "relative",
+                    }}
+                  >
+                    {m.role}
+                  </div>
+                  <div
+                    className="grid-container"
+                    style={{
+                      alignItems: "center",
+                      justifyContent: "center",
+                      display: "flex",
+                    }}
+                  >
+                    {m.team}
+                  </div>
+                  <button
+                    className="btn draw-border"
+                    style={{ backgroundColor: "#dc3545" }}
+                    onClick={() =>
+                      setMembers(
+                        members.filter(
+                          (member) => member.username !== m.username
+                        )
+                      )
+                    }
+                  >
+                    Delete Member
+                  </button>
+                </div>
+              ))}
+            </div>
+          </TabPanel>
         </TabContext>
       </div>
     </>
