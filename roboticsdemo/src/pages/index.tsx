@@ -7,6 +7,9 @@ import TabPanel from "@mui/lab/TabPanel";
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { Modal, Typography } from "@mui/material";
+import Card from "@/components/Card";
+import Form from "@/components/Form";
+import MemberType from "@/types/MemberType";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,24 +19,19 @@ export default function Home() {
   const [username, setUsername] = useState("");
   const [role, setRole] = useState("");
   const [imageUrl, setImageUrl] = useState("");
-  const [teamOptions, _] = useState([
-    "5776A",
-    "5776E",
-    "5776K",
-    "5776T",
-    "5776X",
+  const [teamOptions, _] = useState<
+    ["5776A", "5776E", "5776K", "5776T", "5776X"]
+  >(["5776A", "5776E", "5776K", "5776T", "5776X"]);
+  const [gradeOptions, __] = useState<["9", "10", "11", "12"]>([
+    "9",
+    "10",
+    "11",
+    "12",
   ]);
-  const [gradeOptions, __] = useState(["9", "10", "11", "12"]);
   const [team, setTeam] = useState("5776A");
   const [grade, setGrade] = useState("9");
   const [open, setOpen] = useState(false);
-  const [modalData, setModalData] = useState<{
-    username: string;
-    role: string;
-    imageUrl: string;
-    team: string;
-    grade: string;
-  }>();
+  const [modalData, setModalData] = useState<MemberType>();
   const [editUsername, setEditUsername] = useState(modalData?.username);
   const [editRole, setEditRole] = useState(modalData?.grade);
   const [editImageUrl, setEditImageUrl] = useState(modalData?.imageUrl);
@@ -73,7 +71,6 @@ export default function Home() {
     <>
       <div className="container" style={{ flexDirection: "column" }}>
         <ToastContainer />
-
         <TabContext value={value}>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <TabList onChange={handleChange} aria-label="lab API tabs example">
@@ -91,169 +88,38 @@ export default function Home() {
               flexDirection: "column",
             }}
           >
-            {" "}
             <h1 style={{ fontSize: 50, textAlign: "center" }}>
               DVHS Robotics Members Form
             </h1>
-            <form>
-              <div className="field" tabIndex={1}>
-                <label htmlFor="username">
-                  <i className="fa fa-user"></i>New Member's Name
-                </label>
-                <input
-                  value={username}
-                  onChange={(e) => setUsername(e.currentTarget.value)}
-                  name="username"
-                  type="text"
-                  placeholder="e.g. john doe"
-                  required
-                />
-              </div>
-              <div className="field" tabIndex={2}>
-                <label htmlFor="role">
-                  <i className="fa fa-user"></i>Grade Level
-                </label>
-                <div className="select-dropdown" style={{ marginBottom: 0 }}>
-                  <select
-                    value={grade}
-                    onChange={(e) => {
-                      setGrade(e.target.value);
-                    }}
-                  >
-                    {gradeOptions.map((t) => (
-                      <option value={t}>{t}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-              <div className="field" tabIndex={2}>
-                <label htmlFor="role">
-                  <i className="fa fa-pencil"></i>Role
-                </label>
-                <input
-                  value={role}
-                  onChange={(e) => setRole(e.currentTarget.value)}
-                  name="role"
-                  type="text"
-                  placeholder="Builder/Prog"
-                  required
-                />
-              </div>
-              <div className="field" tabIndex={2} style={{ marginTop: 20 }}>
-                <label htmlFor="role">
-                  <i className="fa fa-user"></i>Team
-                </label>
-                <div className="select-dropdown">
-                  <select
-                    value={team}
-                    onChange={(e) => {
-                      setTeam(e.target.value);
-                    }}
-                  >
-                    {teamOptions.map((t) => (
-                      <option value={t}>{t}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-              <div className="field" tabIndex={3}>
-                <label htmlFor="imageurl">
-                  <i className="fa fa-edit"></i>Member ImageURL
-                </label>
-                <textarea
-                  value={imageUrl}
-                  onChange={(e) => setImageUrl(e.currentTarget.value)}
-                  name="imageurl"
-                  placeholder="Add google drive image, or any other image link here..."
-                  required
-                ></textarea>
-              </div>
-              <button
-                type="reset"
-                style={{
-                  backgroundColor:
-                    username.length > 0 &&
-                    imageUrl.length > 0 &&
-                    role.length > 0
-                      ? ""
-                      : "gray",
-                  cursor:
-                    username.length > 0 &&
-                    imageUrl.length > 0 &&
-                    role.length > 0
-                      ? ""
-                      : "not-allowed",
-                }}
-                disabled={
-                  username.length > 0 && imageUrl.length > 0 && role.length > 0
-                    ? false
-                    : true
-                }
-                onClick={() => {
-                  setMembers([
-                    ...members,
-                    {
-                      username,
-                      role,
-                      imageUrl,
-                      team,
-                      grade,
-                    },
-                  ]);
-                  setUsername("");
-                  setImageUrl("");
-                  setRole("");
-                  toast("Member Successfully Added", { type: "success" });
-                }}
-              >
-                Submit
-              </button>
-            </form>
+            <Form
+              username={username}
+              setUsername={setUsername}
+              grade={grade}
+              setGrade={setGrade}
+              gradeOptions={gradeOptions}
+              role={role}
+              setRole={setRole}
+              team={team}
+              setTeam={setTeam}
+              teamOptions={teamOptions}
+              imageUrl={imageUrl}
+              setImageUrl={setImageUrl}
+              members={members}
+              setMembers={setMembers}
+            />
           </TabPanel>
           <TabPanel value="2">
             <div style={{ display: "flex", flexDirection: "row" }}>
-              {members.map((m) => (
-                <div
-                  className="card"
-                  style={{ marginRight: 40, marginLeft: 40 }}
-                >
-                  <img src={m.imageUrl} alt="" className="card__image" />
-                  <p className="card__name">
-                    {m.username} ({m.grade})
-                  </p>
-                  <div
-                    className="grid-container"
-                    style={{
-                      alignItems: "center",
-                      justifyContent: "center",
-                      display: "flex",
-                      bottom: 10,
-                      position: "relative",
-                    }}
-                  >
-                    {m.role}
-                  </div>
-                  <div
-                    className="grid-container"
-                    style={{
-                      alignItems: "center",
-                      justifyContent: "center",
-                      display: "flex",
-                    }}
-                  >
-                    {m.team}
-                  </div>
-                  <button
-                    className="btn draw-border"
-                    onClick={() => {
-                      handleOpen();
-                      setModalData(m);
-                    }}
-                    style={{ backgroundColor: "#007bff" }}
-                  >
-                    Edit Member
-                  </button>
-                </div>
+              {members.map((member) => (
+                <Card
+                  member={member}
+                  onClick={() => {
+                    handleOpen();
+                    setModalData(member);
+                  }}
+                  backgroundColor="#007bff"
+                  text="Edit"
+                />
               ))}
               <Modal
                 open={open}
@@ -424,51 +290,17 @@ export default function Home() {
           </TabPanel>
           <TabPanel value="3">
             <div style={{ display: "flex", flexDirection: "row" }}>
-              {members.map((m) => (
-                <div
-                  className="card"
-                  style={{ marginRight: 40, marginLeft: 40 }}
-                >
-                  <img src={m.imageUrl} alt="" className="card__image" />
-                  <p className="card__name">
-                    {m.username} ({m.grade})
-                  </p>
-                  <div
-                    className="grid-container"
-                    style={{
-                      alignItems: "center",
-                      justifyContent: "center",
-                      display: "flex",
-                      bottom: 10,
-                      position: "relative",
-                    }}
-                  >
-                    {m.role}
-                  </div>
-                  <div
-                    className="grid-container"
-                    style={{
-                      alignItems: "center",
-                      justifyContent: "center",
-                      display: "flex",
-                    }}
-                  >
-                    {m.team}
-                  </div>
-                  <button
-                    className="btn draw-border"
-                    style={{ backgroundColor: "#dc3545" }}
-                    onClick={() =>
-                      setMembers(
-                        members.filter(
-                          (member) => member.username !== m.username
-                        )
-                      )
-                    }
-                  >
-                    Delete Member
-                  </button>
-                </div>
+              {members.map((member) => (
+                <Card
+                  text="Delete Member"
+                  backgroundColor="#dc3545"
+                  member={member}
+                  onClick={() =>
+                    setMembers(
+                      members.filter((m) => m.username !== member.username)
+                    )
+                  }
+                />
               ))}
             </div>
           </TabPanel>
