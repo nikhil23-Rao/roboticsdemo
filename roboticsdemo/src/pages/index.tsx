@@ -110,6 +110,44 @@ export default function Home() {
           </TabPanel>
           <TabPanel value="2">
             <div style={{ display: "flex", flexDirection: "row" }}>
+              {members.length > 0 ? (
+                <button
+                  className="btn draw-border"
+                  style={{
+                    backgroundColor: "#28a745",
+                    width: 200,
+                    height: 60,
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                  }}
+                  onClick={() => {
+                    let editedMembers = [];
+                    let removeMembers = [];
+                    for (const member of members) {
+                      if (parseInt(member.grade) === 12) {
+                        removeMembers = members.filter(
+                          (m) => m.grade !== member.grade
+                        );
+                        setMembers(removeMembers);
+                      } else {
+                        editedMembers.push({
+                          username: member.username,
+                          role: member.role,
+                          imageUrl: member.imageUrl,
+                          team: member.team,
+                          grade: (parseInt(member.grade) + 1).toString(),
+                        });
+                        setMembers(editedMembers);
+                      }
+                    }
+                  }}
+                >
+                  Increase Grade Level
+                </button>
+              ) : (
+                ""
+              )}
               {members.map((member) => (
                 <Card
                   member={member}
